@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch API Sandbox</title>
+    <!--include bootstrap:-->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1 class="display-4 mb-4">Fetch API Sandbox</h1>
+        <div class="d-flex">
+            <button class="btn btn-primary me-4" id="getText">Get Text</button>
+            <button class="btn btn-success me-4" id="getUsers">Get JSON</button>
+            <button class="btn btn-warning me-4" id="getPosts">Get API Data</button>
+        </div>
+        <hr>
+        <div id="output"></div>
+        <form id="addPost">
+            <div class="form-group">
+                <input class="form-control" type="text" id="title" placeholder="Enter title here">
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" id="body" placeholder="Enter body here"></textarea>
+            </div>
+            <input class="btn btn-secondary mt-4" type="submit" value="Submit">
+        </form>
+    </div>
+    <script>
+        //Add post
+        document.getElementById('addPost').addEventListener('submit', addPost);
+
+        function addPost(e) {
+            e.preventDefault();
+
+            let title = document.getElementById('title').value;
+            let body = document.getElementById('body').value;
+
+            fetch('https://jsonplaceholder.typicode.com/posts', {
+                method:'POST',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-type':'application/json'
+                },
+                body:JSON.stringify({title:title, body:body})})
+                .then((response) => response.json())
+                .then((data) => console.log(data)
+            )
+        }
+        
+        
+        //Get API data
+        document.getElementById('getPosts').addEventListener('click', getPosts);
+        
+        function getPosts() {
+            fetch('https://jsonplaceholder.typicode.com/posts')
+                .then((response) => response.json())
+                .then((data) => {
+                    let output = '<h2>Posts</h2>'
+                    data.forEach(
+                        function (user){
+                            output += `
+                            <ul>
+                                <li><h3>Title: ${user.title}</h3></li>
+                                <par>${user.body}</par>
+                            </ul>`
+                        },
+                    )
+
+                    document.getElementById('output').innerHTML = output;
+                }
+                )
+
+        }
+
+
+        //Get Json
+        document.getElementById('getUsers').addEventListener('click', getUsers);
+
+        function getUsers() {
+            fetch('users.json')
+                .then((response) => response.json())
+                .then((data) => {
+                    let output = '<h2>Users</h2>'
+                    data.forEach(
+                        function (user){
+                            output += `
+                            <ul>
+                                <li>ID: ${user.id}</li>
+                                <li>Name: ${user.name}</li>
+                                <li>Email: ${user.email}</li>
+                            </ul>`
+                        },
+                    );                    
+                    document.getElementById('output').innerHTML = output;
+                });
+            
+        }
+
+
+        //Get text
+        document.getElementById('getText').addEventListener('click', getText)
+
+        function getText() {
+            //Normal functions
+            // fetch('sample.txt')
+            // .then(function (response) {
+            //     return response.text();
+            // })
+            // .then(function (data) {
+            //     console.log(data)
+            // })
+
+            //Arrow functions
+            fetch('sample.txt')
+                .then((response) => response.text())
+                .then((data) => {
+                    document.getElementById('output').innerHTML = data;
+                }
+                )
+                .catch((error) => console.log(error)
+                );
+        }
+    </script>
+</body>
+</html>
