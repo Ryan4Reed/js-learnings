@@ -1,2 +1,2 @@
 # learnings
-Place where I keep code for learnings 
+Place where I keep code related to learnings 
