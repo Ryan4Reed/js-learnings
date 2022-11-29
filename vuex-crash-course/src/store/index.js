@@ -1,5 +1,5 @@
 import Vuex from "vuex";
-import todos from "./modules/todos";
+import todos from "./todos.module";
 
 
 
